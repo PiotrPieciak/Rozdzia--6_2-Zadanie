@@ -30,7 +30,7 @@ def execute_sql(conn, sql):
 
 def add_member(conn, member):
     """
-    Create a new project into the members table
+    Create a new member into the members table
     :param conn:
     :param member:
     :return: member id
@@ -49,7 +49,7 @@ def add_duty(conn, task):
     :param task:
     :return:
     """
-    sql = '''INSERT INTO tasks(duty_id, duty_name, duty_description, day_of_week_to_complete) 
+    sql = '''INSERT INTO tasks(member_id, duty_name, duty_description, day_of_week_to_complete) 
     VALUES(?,?,?,?)'''
     cur = conn.cursor()
     cur.execute(sql, task)
@@ -111,11 +111,11 @@ if __name__ == "__main__":
     -- responsibilities table
     CREATE TABLE IF NOT EXISTS tasks (
         id integer PRIMARY KEY,
-        duty_id integer NOT NULL,
+        member_id integer NOT NULL,
         duty_name text NOT NULL,
         duty_description text NOT NULL,
         day_of_week_to_complete text NOT NULL,
-        FOREIGN KEY (duty_id) REFERENCES members (id)
+        FOREIGN KEY (member_id) REFERENCES members (id)
     );
     """
 #Nawiązanie połaczenia z bazą danych i utworzenie 2 tabeli
@@ -133,6 +133,13 @@ if __name__ == "__main__":
         "Weekly shopping",
         "Once per week go to supermarket to buy needed items",
         "saturday"
+    )
+    add_duty(conn, duty)
+    duty = (
+        mb_id,
+        "Kodilla learning",
+        "Learn programing as much as I can",
+        "24/7"
     )
     add_duty(conn, duty)
 #_______________dodanie drugiej osoby i obowiązków______________
@@ -174,7 +181,7 @@ if __name__ == "__main__":
 #___________update danych z tabeli_______________
     update(conn, "tasks", 1, day_of_week_to_complete="FRIDAY")
 #____________usuwanie wpisu (Rafałek wchodzi w fazę buntu nastolatka)_____________
-    delete_where(conn, "tasks", id=3)
+    delete_where(conn, "tasks", id=4)
 #__________Zakonczenie programu_____________
     print("Program stworzył bazę danych i nawiązał połączenie, stworzył 2 tabele i  dodał do nich wpisy, następnie zaznaczył i wydrukował wszytskie wiersze w tabeli members, Zrobił update na danych a na końcu usunał zadanie przypisane do Rafała (gdy zaczyna wchodzić w fazę buntu nastolatka)")
     conn.commit()
